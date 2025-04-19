@@ -42,25 +42,7 @@ class JobService {
 
                 let jobTitle = (entities?["job_title:job_title"] as? [[String: Any]])?.first?["value"] as? String ?? ""
                 let location = (entities?["wit$location:location"] as? [[String: Any]])?.first?["body"] as? String ?? ""
-                
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--1--")
-                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["body"] as? String ?? "--12--")
-                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--13--")
-                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--14--")
-                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--15--")
-                print((entities?["location:body"] as? [[String: Any]])?.first?["value"] as? String ?? "--2--")
-                print((entities?["location:confidence"] as? [[String: Any]])?.first?["value"] as? String ?? "--3--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--4--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--5--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--6--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--7--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--8--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--9--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--10--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--11--")
-                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--12--")
-                
-                
+             
 
 //                print("Parsed from Wit: \(jobTitle), \(location)")
 
