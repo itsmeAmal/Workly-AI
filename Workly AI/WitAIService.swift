@@ -57,6 +57,9 @@ class WitAIService {
             do {
                 let decoded = try JSONDecoder().decode(WitResponse.self, from: data)
                 completion(decoded)
+                print("=========================================================")
+                print("Wit.ai response: \(decoded)")
+
             } catch {
                 print("Decoding error:", error)
                 completion(nil)

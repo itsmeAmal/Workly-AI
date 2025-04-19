@@ -1,107 +1,3 @@
-//
-//struct ChatMessage: Identifiable {
-//    let id = UUID()
-//    let role: Role
-//    let content: String
-//
-//    enum Role {
-//        case user
-//        case assistant
-//    }
-//}
-//
-//struct ChatBotContentView: View {
-//    @State private var userInput = ""
-//    @State private var messages: [ChatMessage] = []
-//    @State private var isLoading = false
-//
-//    var body: some View {
-//        VStack {
-//            ScrollViewReader { scrollViewProxy in
-//                ScrollView {
-//                    LazyVStack(alignment: .leading, spacing: 10) {
-//                        ForEach(messages) { message in
-//                            HStack {
-//                                if message.role == .user {
-//                                    Spacer()
-//                                    Text(message.content)
-//                                        .padding()
-//                                        .background(Color.blue.opacity(0.2))
-//                                        .cornerRadius(10)
-//                                        .foregroundColor(.black)
-//                                } else {
-//                                    Text(message.content)
-//                                        .padding()
-//                                        .background(Color.gray.opacity(0.2))
-//                                        .cornerRadius(10)
-//                                        .foregroundColor(.black)
-//                                    Spacer()
-//                                }
-//                            }
-//                            .padding(.horizontal)
-//                        }
-//                        if isLoading {
-//                            HStack {
-//                                ProgressView()
-//                                    .padding(.leading)
-//                                Spacer()
-//                            }
-//                        }
-//                    }
-//                }
-//                .onChange(of: messages.count) { _ in
-//                    withAnimation {
-//                        scrollViewProxy.scrollTo(messages.last?.id, anchor: .bottom)
-//                    }
-//                }
-//            }
-//
-//            Divider()
-//
-//            HStack {
-//                TextField("Ask something...", text: $userInput)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .disabled(isLoading)
-//
-//                Button("Send") {
-//                    sendMessage()
-//                }
-//                .disabled(userInput.trimmingCharacters(in: .whitespaces).isEmpty || isLoading)
-//            }
-//            .padding()
-//        }
-//    }
-//
-//    private func sendMessage() {
-//        let input = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
-//        guard !input.isEmpty else { return }
-//
-//        messages.append(ChatMessage(role: .user, content: input))
-//        userInput = ""
-//        isLoading = true
-//
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            if let data = JobService.shared.getJobDataFromWitAI(userQuery: input) {
-//                let jobs = parseJobs(jsonData: data)
-//
-//                let responseText = jobs.isEmpty
-//                    ? "Sorry, I couldn't find any jobs."
-//                    : "Here are some jobs I found:\n" + jobs.map { "• \($0.title) at \($0.company.displayName)" }.joined(separator: "\n")
-//
-//                DispatchQueue.main.async {
-//                    messages.append(ChatMessage(role: .assistant, content: responseText))
-//                    isLoading = false
-//                }
-//            } else {
-//                DispatchQueue.main.async {
-//                    messages.append(ChatMessage(role: .assistant, content: "Oops! Something went wrong while fetching jobs."))
-//                    isLoading = false
-//                }
-//            }
-//        }
-//    }
-//}
-
 import SwiftUI
 
 // MARK: - Models
@@ -133,7 +29,6 @@ struct ChatMessage: Identifiable {
 //    @Published var jobPills: [JobPillViewModel] = []
 //
 //    init() {
-//        // Initial polite chatbot message
 //        messages.append(ChatMessage(role: .assistant, content: "👋 Hi there! I’m Workly.AI. Tell me what job you're looking for, and I’ll find some options for you."))
 //    }
 //
@@ -153,11 +48,10 @@ struct ChatMessage: Identifiable {
 //                    self.isLoading = false
 //                    if jobs.isEmpty {
 //                        self.messages.append(ChatMessage(role: .assistant, content: "Hmm, I couldn’t find any jobs matching that search. Maybe try changing your job title or location?"))
-//                        self.jobPills = []
+//                        self.jobPills = [] // Remove old pills if new search has no results
 //                    } else {
 //                        self.messages.append(ChatMessage(role: .assistant, content: "🎉 Great news! I found some job openings on Adzuna. Here are a few you might like:"))
-//                        
-//                        // Create pills from jobs
+//
 //                        let pills = jobs.prefix(5).map { job in
 //                            JobPillViewModel(
 //                                title: job.title,
@@ -165,13 +59,15 @@ struct ChatMessage: Identifiable {
 //                                company: "Adzuna"
 //                            )
 //                        }
-//                        self.jobPills = pills
+//
+//                        self.jobPills = pills // Update pills with new results
 //                    }
 //                }
 //            } else {
 //                DispatchQueue.main.async {
 //                    self.messages.append(ChatMessage(role: .assistant, content: "Oops! Something went wrong while fetching jobs."))
 //                    self.isLoading = false
+//                    self.jobPills = [] // Clear pills if request fails
 //                }
 //            }
 //        }
@@ -267,3 +163,4 @@ struct ChatBotContentView: View {
         }
     }
 }
+

@@ -34,15 +34,41 @@ class JobService {
             do {
                 let witResult = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                 let entities = witResult?["entities"] as? [String: Any]
+                
+                print("================= start - print location json response entity ==================")
+                print(entities)
+                print("================= end - print location json response entity==================")
 
-                let jobTitle = (entities?["job_title:job_title"] as? [[String: Any]])?.first?["value"] as? String ?? "developer"
-                let location = (entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "USA"
 
-                print("Parsed from Wit: \(jobTitle), \(location)")
+                let jobTitle = (entities?["job_title:job_title"] as? [[String: Any]])?.first?["value"] as? String ?? ""
+                let location = (entities?["wit$location:location"] as? [[String: Any]])?.first?["body"] as? String ?? ""
+                
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--1--")
+                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["body"] as? String ?? "--12--")
+                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--13--")
+                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--14--")
+                print((entities?["wit$location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--15--")
+                print((entities?["location:body"] as? [[String: Any]])?.first?["value"] as? String ?? "--2--")
+                print((entities?["location:confidence"] as? [[String: Any]])?.first?["value"] as? String ?? "--3--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--4--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--5--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--6--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--7--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--8--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--9--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--10--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--11--")
+                print((entities?["location:location"] as? [[String: Any]])?.first?["value"] as? String ?? "--12--")
+                
+                
+
+//                print("Parsed from Wit: \(jobTitle), \(location)")
 
                 let appId = "9535593c"
                 let appKey = "f2aed4b68604d38d366a4c39f1ec1e1c"
                 let adzunaUrl = "https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=\(appId)&app_key=\(appKey)&results_per_page=10&what=\(jobTitle)&where=\(location)"
+//                let adzunaUrl = "https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=\(appId)&app_key=\(appKey)&results_per_page=10&what=\(jobTitle)&where=\("New Jersey")"
+
 
                 guard let url = URL(string: adzunaUrl) else {
                     print("Invalid Adzuna URL")

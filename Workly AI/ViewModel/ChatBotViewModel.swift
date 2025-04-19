@@ -40,6 +40,11 @@ class ChatBotViewModel: ObservableObject {
                             )
                         }
                         self.jobPills = pills
+                        
+//                        print("==========================================================================")
+//                        print("User asked: \(self.userInput)")
+//                        print("Parsed Jobs: \(jobs.map { $0.title + " - " + $0.location.displayName })")
+
                     }
 
                     self.isLoading = false
