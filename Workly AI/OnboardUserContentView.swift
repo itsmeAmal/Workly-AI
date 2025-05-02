@@ -14,7 +14,14 @@ struct OnboardUserContentView: View {
     @State private var educationLevel = "High School"
     @State private var isJobSeeker = false
     
+    @State private var showSummary = false
+    
     let educationOptions = ["High School", "Diploma", "Bachelor's", "Master's", "PhD"]
+    
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var onFinish: () -> Void
     
     var body: some View {
         VStack {
@@ -83,7 +90,19 @@ struct OnboardUserContentView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                     
-                    Button(action: { /* Navigate to main app */ }) {
+                    Button(action: {
+//                        guard let a = String(name), !name.isEmpty else { return }
+//                        DBManager.shared.insert(name: name, age: email)
+//                        onFinish()
+//                        dismiss()
+                        guard !name.isEmpty, !email.isEmpty else { return }
+                            DBManager.shared.insert(name: name,
+                                                    dob: dateOfBirth,
+                                                    email: email)
+                            onFinish()
+                            showSummary = true
+                            //dismiss()
+                    }) {
                         Text("Let's Go 🚀")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -92,8 +111,16 @@ struct OnboardUserContentView: View {
                             .cornerRadius(10)
                             .padding()
                     }
+                    .navigationDestination(isPresented: $showSummary) {
+                            UserSummaryView(name:  name,
+                                            email: email,
+                                            dob:   dateOfBirth
+                            )
+                        }
                 }
-                .padding()
+                //.navigationTitle("New User")
+                //.padding()
+                
             }
         }
         .animation(.easeInOut, value: currentStep)
@@ -101,7 +128,7 @@ struct OnboardUserContentView: View {
     }
     
     private func nextStep() {
-        if currentStep < 4 {
+        if currentStep < 5 {
             currentStep += 1
         }
     }
@@ -143,10 +170,10 @@ struct StepView: View {
         .padding()
     }
 }
-
-// Preview
-struct OnboardUserContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardUserContentView()
-    }
-}
+//
+//// Preview
+//struct OnboardUserContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        OnboardUserContentView()
+//    }
+//}

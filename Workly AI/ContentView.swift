@@ -70,6 +70,13 @@ struct ContentView: View {
                     Text("Settings")
                 }
                 .tag(5)
+            
+            OnboardUserContentView(onFinish: {})
+                .tabItem {
+                    Image(systemName: "gearshape.fill")
+                    Text("Onboard User")
+                }
+                .tag(6)
         }
     }
 }
