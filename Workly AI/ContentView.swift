@@ -90,9 +90,7 @@ struct BotGuideView: View {
 
 struct MockInterviewView: View {
     var body: some View {
-        Text("Personalized Interview Preparation")
-            .font(.title)
-            .padding()
+        MockInterviewContentView()
     }
 }
 
