@@ -5,23 +5,7 @@
 //  Created by Amal Wickramarathna on 2025-03-29.
 //
 
-//import SwiftUI
-//
-//struct ContentView: View {
-//    var body: some View {
-//        VStack {
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundStyle(.tint)
-//            Text("Hello, world!")
-//        }
-//        .padding()
-//    }
-//}
-//
-//#Preview {
-//    ContentView()
-//}
+
 import SwiftUI
 
 struct ContentView: View {
@@ -57,7 +41,7 @@ struct ContentView: View {
                 }
                 .tag(3)
             
-            ProfileView()
+            ProfileView(name: "yasasi jayawardena", email: "yasasi@gmailllll.com", dob: "1997-10-25", gender: "Female", educationLevel: "Masters's Degree", contactNo: "+94767233764")
                 .tabItem {
                     Image(systemName: "person.crop.circle.fill")
                     Text("Profile")
@@ -103,7 +87,9 @@ struct MockInterviewView: View {
     }
 }
 
-struct ProfileView: View {
+
+
+struct Profile_View: View {
     @State private var isEditing = false
     
     var body: some View {
@@ -116,7 +102,7 @@ struct ProfileView: View {
                 
                 Form {
                     Section(header: Text("Personal Details")) {
-                        Text("Full Name: John Doe")
+                        Text("Full Name: John Doee")
                         Text("Date of Birth: January 1, 1990")
                         Text("Gender: Male")
                     }
@@ -146,6 +132,150 @@ struct ProfileView: View {
         }
     }
 }
+
+
+
+
+struct ProfileView: View {
+    //@State private var users: [User] = DBManager.shared.fetchUsers()
+    //@State private var showingAdd = false
+    
+    @State private var isEditing = false
+    
+    //@State private var name: String = "John Doe"
+    @State private var dateOfBirth: Date = Date()
+    //@State private var gender: String = "Male"
+    //@State private var educationLevel: String = "Bachelor's Degree"
+    //@State private var contactNo: String = "+1 234 567 890"
+    //@State private var email: String = "johndoe@example.com"
+    @State private var password: String = "password123"
+
+    let name: String
+    let email: String
+    let dob: String
+    let gender: String
+    let educationLevel: String
+    let contactNo: String
+
+    let genderOptions = ["Male", "Female", "Other"]
+    let educationOptions = ["High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"]
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Personal Details")) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.fill")
+                            .foregroundColor(.secondary)
+
+                        TextField("Full Name", text: .constant(name))
+                            .disabled(true)   //keep it read‑only
+                    }
+                    //TextField("Full Name", text: .constant(name))
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "cake.fill")
+                            .foregroundColor(.secondary)
+
+                        TextField("Date of Birth", text: .constant(dob))
+                            .disabled(true)   //keep it read‑only
+                    }
+                    //DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "gender.fill")
+                            .foregroundColor(.secondary)
+
+                        TextField("Gender", text: .constant(gender))
+                            .disabled(true)   //keep it read‑only
+                    }
+//                    Picker("Gender", selection: $gender) {
+//                        ForEach(genderOptions, id: \.self) { option in
+//                            Text(option)
+//                        }
+//                    }
+                    
+                }
+                
+                
+                
+                Section(header: Text("Education & Contact")) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "education.fill")
+                            .foregroundColor(.secondary)
+                        
+                        TextField("Higher Education Level", text: .constant(educationLevel))
+                            .disabled(true)   //keep it read‑only
+                    }
+                    //                    Picker("Higher Education Level", selection: $educationLevel) {
+                    //                        ForEach(educationOptions, id: \.self) { option in
+                    //                            Text(option)
+                    //                        }
+                    //                    }
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "phone.fill")
+                            .foregroundColor(.secondary)
+                        
+                        TextField("Contact Number", text: .constant(contactNo))
+                            .disabled(true)   //keep it read‑only
+                    }
+                    //                    TextField("Contact Number", text: $contactNo)
+                    //                        .keyboardType(.phonePad)
+                    
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "envelop.fill")
+                            .foregroundColor(.secondary)
+                        
+                        TextField("Email", text: .constant(email))
+                            .disabled(true)  //keep it read‑only
+                    }
+                    //TextField("Email", text: .constant(email)).keyboardType(.emailAddress)
+                    
+                }
+                
+                
+                Section(header: Text("Security")) {
+                    SecureField("Password", text: $password)
+                }
+                
+                
+//                Section {
+//                    Button(action: updateProfile) {
+//                        Text("Update Profile")
+//                            .frame(maxWidth: .infinity, alignment: .center)
+//                    }
+//                    .buttonStyle(.borderedProminent)
+//                }
+                Button(action: {
+                    isEditing = true
+                }) {
+                    Text("Edit Profile")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding()
+                }
+                .sheet(isPresented: $isEditing) {
+                    ProfileEditView()
+                }
+            }
+            .navigationTitle("Profile")
+        }
+    }
+
+    func updateProfile() {
+        print("Profile Updated")
+    }
+
+}
+
+
+
+
 
 struct ProfileEditView: View {
     @State private var name: String = "John Doe"

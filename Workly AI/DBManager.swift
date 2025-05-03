@@ -82,37 +82,44 @@ final class DBManager {
     }
 
     // MARK: ‑ Read
-    func fetchUsers() -> [User] {
-        let sql = "SELECT id, name, dob, email FROM users ORDER BY id DESC"
-        var stmt: OpaquePointer?
-        var result = [User]()
-        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return result }
-
-        while sqlite3_step(stmt) == SQLITE_ROW {
-            let id    = sqlite3_column_int(stmt, 0)
-            let name  = String(cString: sqlite3_column_text(stmt, 1))
-            let dobStr = String(cString: sqlite3_column_text(stmt, 2))
-            let email = String(cString: sqlite3_column_text(stmt, 3))
-
-            let dob = iso.date(from: dobStr) ?? Date()
-            result.append(User(id: id, name: name, dob: dob, email: email))
-        }
-        sqlite3_finalize(stmt)
-        return result
-    }
+//    func fetchUsers() -> [User] {
+//        let sql = "SELECT id, name, dob, email FROM users ORDER BY id DESC"
+//        var stmt: OpaquePointer?
+//        var result = [User]()
+//        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return result }
+//
+//        while sqlite3_step(stmt) == SQLITE_ROW {
+//            let id    = sqlite3_column_int(stmt, 0)
+//            let name  = String(cString: sqlite3_column_text(stmt, 1))
+//            let dobStr = String(cString: sqlite3_column_text(stmt, 2))
+//            let email = String(cString: sqlite3_column_text(stmt, 3))
+//
+//            let dob = iso.date(from: dobStr) ?? Date()
+//            result.append(User(id: id, name: name, dob: dob, email: email, contactNo: email))
+//        }
+//        sqlite3_finalize(stmt)
+//        return result
+//    }
 
     // MARK: ‑ Update
-    func update(user: User) {
-        let sql = "UPDATE users SET name=?, dob=?, email=? WHERE id=?"
-        _ = exec(sql: sql) { [self] stmt in
-            sqlite3_bind_text(stmt, 1, (user.name  as NSString).utf8String, -1, SQLITE_TRANSIENT)
-            sqlite3_bind_text(stmt, 2, (iso.string(from: user.dob) as NSString).utf8String,
-                              -1, SQLITE_TRANSIENT)
-            sqlite3_bind_text(stmt, 3, (user.email as NSString).utf8String, -1, SQLITE_TRANSIENT)
-            sqlite3_bind_int(stmt, 4, user.id)
-        }
-    }
+//    func update(user: User) {
+//        let sql = "UPDATE users SET name=?, dob=?, email=? WHERE id=?"
+//        _ = exec(sql: sql) { [self] stmt in
+//            sqlite3_bind_text(stmt, 1, (user.name  as NSString).utf8String, -1, SQLITE_TRANSIENT)
+//            sqlite3_bind_text(stmt, 2, (iso.string(from: user.dob) as NSString).utf8String,
+//                              -1, SQLITE_TRANSIENT)
+//            sqlite3_bind_text(stmt, 3, (user.email as NSString).utf8String, -1, SQLITE_TRANSIENT)
+//            sqlite3_bind_int(stmt, 4, user.id)
+//        }
+//    }
 
+    
+    
+    
+    
+    
+    
+    
     
     
     

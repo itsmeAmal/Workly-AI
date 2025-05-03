@@ -8,16 +8,10 @@
 
 import Foundation
 
-//struct User: Identifiable {
-//    let id: Int32          // SQLite INTEGER PRIMARY KEY
-//    var name: String
-//    var age: Int
-//}
-
-
 struct User: Identifiable {
     let id: Int32
     var name: String
-    var dob: Date         // NEW
-    var email: String     // NEW
+    var dob: String
+    var email: String
+    var contactNo: String 
 }
