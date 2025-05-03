@@ -66,6 +66,6 @@ struct UserSummaryView: View {
 
 struct UserSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-        UserSummaryView(name: "abcde", email: "abc@gmail.com", dob: "2002-10-02", contactNo: "+94767233764")
+        UserSummaryView(name: "abcd", email: "abc@gmail.com", dob: "2002-10-02", contactNo: "+94767233764")
     }
 }

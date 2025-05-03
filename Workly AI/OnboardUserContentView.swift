@@ -237,6 +237,18 @@ struct OnboardUserContentView: View {
                     //                }
                 } else if currentStep == 3 {
                     StepView(
+                        title: "What's your Contact No? 📧",
+                        subtitle: "Your Telephone No helps us keep you updated.",
+                        content: AnyView(
+                            TextField("Enter your Contact No", text: $contactNo)
+                                .textFieldStyle(.roundedBorder)
+                                .padding()
+                        ),
+                        actionTitle: "Next",
+                        action: { nextStep() }
+                    )
+                } else if currentStep == 4 {
+                    StepView(
                         title: "What best describes you? 🎓💼",
                         subtitle: "Are you a student or a job seeker?",
                         content: AnyView(
