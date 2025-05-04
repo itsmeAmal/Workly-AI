@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-/// Shows all rows in the **users** table.
-/// – Swipe‑to‑delete removes the row on disk and from the list.
+// Swipe to removes the row on disk and from the list
 struct AllUsersView: View {
     @State private var users: [User] = []
 

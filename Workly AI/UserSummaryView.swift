@@ -51,7 +51,7 @@ struct UserSummaryView: View {
             Label(name,  systemImage: "person.fill")
             Label(email, systemImage: "envelope.fill")
             Label(dob, systemImage: "calendar")
-            Label(contactNo, systemImage: "phone")
+            //Label(contactNo, systemImage: "phone")
         }
         .font(.title3)
         .padding()

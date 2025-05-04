@@ -12,8 +12,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     
     @State private var users: [User] = DBManager.shared.fetchUsers()
-    
-    
+        
     var body: some View {
         TabView(selection: $selectedTab) {
             DashboardView()
@@ -43,8 +42,7 @@ struct ContentView: View {
                     Text("Mock Interview")
                 }
                 .tag(3)
-        
-            
+                    
             if let currentUser = users.first {
                             ProfileView(user: currentUser)
                                 .tabItem {
@@ -61,9 +59,7 @@ struct ContentView: View {
                                 }
                                 .tag(4)
                         }
-            
-            
-            
+                                    
             SettingsView()
                 .tabItem {
                     Image(systemName: "gearshape.fill")
@@ -97,6 +93,7 @@ struct DashboardView: View {
     }
 }
 
+
 struct BotGuideView: View {
     var body: some View {
         Text("AI-Powered Chatbot for Career Guidance")
@@ -105,6 +102,7 @@ struct BotGuideView: View {
     }
 }
 
+
 struct MockInterviewView: View {
     var body: some View {
         Text("Personalized Interview Preparation")
@@ -112,55 +110,6 @@ struct MockInterviewView: View {
             .padding()
     }
 }
-
-
-
-//struct Profile_View: View {
-//    @State private var isEditing = false
-//    
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                Text("Profile")
-//                    .font(.largeTitle)
-//                    .bold()
-//                    .padding()
-//                
-//                Form {
-//                    Section(header: Text("Personal Details")) {
-//                        Text("Full Name: John Doee")
-//                        Text("Date of Birth: January 1, 1990")
-//                        Text("Gender: Male")
-//                    }
-//                    
-//                    Section(header: Text("Education & Contact")) {
-//                        Text("Higher Education Level: Bachelor's Degree")
-//                        Text("Contact Number: +1 234 567 890")
-//                        Text("Email: johndoe@example.com")
-//                    }
-//                }
-//                
-//                Button(action: {
-//                    isEditing = true
-//                }) {
-//                    Text("Edit Profile")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .foregroundColor(.white)
-//                        .cornerRadius(10)
-//                        .padding()
-//                }
-//                .sheet(isPresented: $isEditing) {
-//                    ProfileEditView()
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-
 
 
 struct ProfileView: View {
@@ -178,14 +127,14 @@ struct ProfileView: View {
             }
 
             Section(header: Text("Contact")) {
-                //infoRow(label: "phone.fill", text: user.contactNo)
+                infoRow(label: "phone.fill", text: user.contactNo)
                 infoRow(label: "envelope.fill", text: user.email)
             }
         }
         .navigationTitle("Profile")
     }
 
-    
+
     // this will avoid repeating the HStack
     @ViewBuilder
     private func infoRow(label systemImage: String, text: String) -> some View {
@@ -200,8 +149,6 @@ struct ProfileView: View {
 
 
 
-//
-//
 //struct ProfileView: View {
 //    @State private var users: [User] = DBManager.shared.fetchUsers()
 //    @State private var showingAdd = false

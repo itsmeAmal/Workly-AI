@@ -13,7 +13,7 @@ struct User: Identifiable {
     var name: String
     var dob: String
     var email: String
-    //var contactNo: String
+    var contactNo: String
     //var gender: String
     //var educationLevel: String
 }

@@ -219,22 +219,6 @@ struct OnboardUserContentView: View {
                         action: { nextStep() }
                     )
                     
-                    //STEP 3
-                    //                } else if currentStep == 3 {
-                    //                    StepView(
-                    //                        title: "How can we reach you (Contact No.)? 📧",
-                    //                        subtitle: "Your contact number helps us keep you updated.",
-                    //                        content: AnyView(
-                    //                            TextField("Enter your Contact No.", text: $contactNo)
-                    //                                .textFieldStyle(.roundedBorder)
-                    //                                .padding()
-                    //                        ),
-                    //                        actionTitle: "Next",
-                    //                        action: { nextStep() }
-                    //                    )
-                    //
-                    //                //STEP 4  ➜  INSERT & PUSH SUMMARY
-                    //                }
                 } else if currentStep == 3 {
                     StepView(
                         title: "What's your Contact No? 📧",
@@ -266,12 +250,13 @@ struct OnboardUserContentView: View {
                         ),
                         actionTitle: "Finish",
                         action: {
-                            guard !name.isEmpty, !email.isEmpty else { return }
+                            guard !name.isEmpty, !email.isEmpty, !contactNo.isEmpty else { return }
 
                             DBManager.shared.insert(
                                 name: name,
                                 dob: dateOfBirth,
-                                email: email
+                                email: email,
+                                contactNo: contactNo
                             )
                             onFinish()
                             showSummary = true    // trigger navigation
