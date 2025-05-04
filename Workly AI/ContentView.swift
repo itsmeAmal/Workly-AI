@@ -124,9 +124,12 @@ struct ProfileView: View {
             Section(header: Text("Personal Details")) {
                 infoRow(label: "person.fill", text: user.name)
                 infoRow(label: "birthday.cake.fill", text: user.dob)
+                infoRow(label: "person.circle.fill", text: user.gender)
+                infoRow(label: "briefcase.fill", text: user.isJobSeeker ? "Actively seeking for a Job" : "Not seeking for a Job")
             }
 
-            Section(header: Text("Contact")) {
+            Section(header: Text("Education & Contact")) {
+                infoRow(label: "graduationcap.fill", text: user.educationLevel)
                 infoRow(label: "phone.fill", text: user.contactNo)
                 infoRow(label: "envelope.fill", text: user.email)
             }

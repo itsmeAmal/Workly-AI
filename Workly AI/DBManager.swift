@@ -53,7 +53,7 @@ final class DBManager {
     
     private func dropTable() {
         let sql = """
-            DROP TABLE users;
+            DROP TABLE usrr;
         """
         _ = exec(sql: sql)
     }
@@ -62,12 +62,15 @@ final class DBManager {
     // MARK:‑ Schema
     private func createTable() {
         let sql = """
-            CREATE TABLE IF NOT EXISTS user_tabl(
+            CREATE TABLE IF NOT EXISTS usrr(
                 id   INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 dob   TEXT,          -- ISO‑8601 yyyy-MM-dd
                 email TEXT,
-                contactNo TEXT
+                contactNo   TEXT,
+                educationLevel  TEXT,
+                gender     TEXT,
+                isJobSeeker   INTEGER
             );
         """
         _ = exec(sql: sql)
@@ -94,6 +97,7 @@ final class DBManager {
         f.formatOptions = [.withFullDate]
         return f
     }()
+    
 
     // MARK: ‑ Insert
 //    func insert(name: String, dob: Date, email: String) {
@@ -106,18 +110,22 @@ final class DBManager {
 //        }
 //    }
     
-    func insert(name: String, dob: Date, email: String, contactNo: String) {
-        let sql = "INSERT INTO user_tabl (name, dob, email, contactNo) VALUES (?,?,?,?)"
+    
+    func insert(name: String, dob: Date, email: String, contactNo: String, educationLevel: String, gender: String, isJobSeeker: Bool) {
+        let sql = "INSERT INTO usrr (name, dob, email, contactNo, educationLevel, gender, isJobSeeker) VALUES (?,?,?,?,?,?,?)"
         _ = exec(sql: sql) { [self] stmt in
             sqlite3_bind_text(stmt, 1, (name as NSString).utf8String, -1, SQLITE_TRANSIENT)
             sqlite3_bind_text(stmt, 2, (iso.string(from: dob) as NSString).utf8String, -1, SQLITE_TRANSIENT)
             sqlite3_bind_text(stmt, 3, (email as NSString).utf8String, -1, SQLITE_TRANSIENT)
             sqlite3_bind_text(stmt, 4, (contactNo as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 5, (educationLevel as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 6, (gender as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_int (stmt, 7, isJobSeeker ? 1 : 0)
         }
     }
 
     
-    // MARK: ‑ Read
+    
 //    func fetchUsers() -> [User] {
 //        let sql = "SELECT id, name, dob, email FROM users ORDER BY id DESC"
 //        var stmt: OpaquePointer?
@@ -138,8 +146,9 @@ final class DBManager {
 //    }
     
     
+    // MARK: ‑ Read
     func fetchUsers() -> [User] {
-        let sql = "SELECT id, name, dob, email, contactNo FROM user_tabl ORDER BY id DESC"
+        let sql = "SELECT id, name, dob, email, contactNo, educationLevel, gender, isJobSeeker FROM usrr ORDER BY id DESC"
         var stmt: OpaquePointer?
         var out = [User]()
 
@@ -151,8 +160,22 @@ final class DBManager {
             let dob  = String(cString: sqlite3_column_text(stmt, 2))
             let mail = String(cString: sqlite3_column_text(stmt, 3))
             let phone = String(cString: sqlite3_column_text(stmt, 4))
+            let educationLevel = String(cString: sqlite3_column_text(stmt, 5))
+            let gender = String(cString: sqlite3_column_text(stmt, 6))
+            let seeker = sqlite3_column_int(stmt, 7) == 1
 
-            out.append(User(id: id, name: name, dob: dob, email: mail, contactNo: phone))
+            out.append(
+                User(
+                    id: id,
+                    name: name,
+                    dob: dob,
+                    email: mail,
+                    contactNo: phone,
+                    educationLevel: educationLevel,
+                    gender: gender,
+                    isJobSeeker: seeker
+                )
+            )
         }
         sqlite3_finalize(stmt)
         return out
@@ -175,7 +198,7 @@ final class DBManager {
     
   
     func delete(id: Int32) {
-        let sql = "DELETE FROM user_tabl WHERE id=?"
+        let sql = "DELETE FROM usrr WHERE id=?"
         _ = exec(sql: sql) { stmt in
             sqlite3_bind_int(stmt, 1, id)
         }

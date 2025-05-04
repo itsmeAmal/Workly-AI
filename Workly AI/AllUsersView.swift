@@ -34,10 +34,20 @@ struct AllUsersView: View {
             HStack {
                 Label(user.email, systemImage: "envelope.fill")
                 Spacer(minLength: 12)
-                Label(user.dob, systemImage: "calendar.fill")
+                Label(user.dob, systemImage: "birthday.cake.fill")
             }
             .font(.subheadline)
             .foregroundColor(.secondary)
+            .padding(.vertical, 7)
+            
+            HStack {
+                Label(user.educationLevel, systemImage: "graduationcap.fill")
+                Spacer(minLength: 12)
+                Label(user.contactNo, systemImage: "phone.fill")
+            }
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+                
         }
         .padding(.vertical, 4)
     }

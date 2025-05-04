@@ -162,11 +162,14 @@ struct OnboardUserContentView: View {
     @State private var email = ""
     @State private var educationLevel = "High School"
     @State private var isJobSeeker = false
+    @State private var gender = "Male"
 
     @State private var showSummary = false
 
     let educationOptions = ["High School", "Diploma",
                             "Bachelor's", "Master's", "PhD"]
+    private let genderOptions = ["Male", "Female", "Other"]
+    
 
     @Environment(\.dismiss) private var dismiss
     var onFinish: () -> Void = {}
@@ -191,6 +194,22 @@ struct OnboardUserContentView: View {
                 //STEP 1
                 } else if currentStep == 1 {
                     StepView(
+                        title: "Tell us your gender ⚧️",
+                        subtitle: "Optional, but helps us personalize things.",
+                        content: AnyView(
+                            Picker("Gender", selection: $gender) {
+                                ForEach(genderOptions, id: \.self) { Text($0) }
+                            }
+                                .pickerStyle(.segmented)
+                                .padding()
+                        ),
+                        actionTitle: "Finish",
+                        action: { nextStep() }
+                    )
+                    
+                //STEP 2
+                } else if currentStep == 2 {
+                    StepView(
                         title: "When is your birthday? 🎂",
                         subtitle: "This helps us personalize your experience.",
                         content: AnyView(
@@ -204,8 +223,8 @@ struct OnboardUserContentView: View {
                         action: { nextStep() }
                     )
 
-                //STEP 2
-                } else if currentStep == 2 {
+                //STEP 3
+                } else if currentStep == 3 {
                     StepView(
                         title: "How can we reach you? 📧",
                         subtitle: "Your email helps us keep you updated.",
@@ -219,10 +238,11 @@ struct OnboardUserContentView: View {
                         action: { nextStep() }
                     )
                     
-                } else if currentStep == 3 {
+                //STEP 4
+                } else if currentStep == 4 {
                     StepView(
-                        title: "What's your Contact No? 📧",
-                        subtitle: "Your Telephone No helps us keep you updated.",
+                        title: "What's your Contact Number? ☎️",
+                        subtitle: "Your phone helps us keep you updated.",
                         content: AnyView(
                             TextField("Enter your Contact No", text: $contactNo)
                                 .textFieldStyle(.roundedBorder)
@@ -231,7 +251,9 @@ struct OnboardUserContentView: View {
                         actionTitle: "Next",
                         action: { nextStep() }
                     )
-                } else if currentStep == 4 {
+                    
+                //STEP 5
+                } else if currentStep == 5 {
                     StepView(
                         title: "What best describes you? 🎓💼",
                         subtitle: "Are you a student or a job seeker?",
@@ -256,12 +278,16 @@ struct OnboardUserContentView: View {
                                 name: name,
                                 dob: dateOfBirth,
                                 email: email,
-                                contactNo: contactNo
+                                contactNo: contactNo,
+                                educationLevel: educationLevel,
+                                gender: gender,
+                                isJobSeeker: isJobSeeker
                             )
                             onFinish()
                             showSummary = true    // trigger navigation
                         }
                     )
+                    
                 } else {
                     // 🎉 Final Welcome Screen
 //                    VStack(spacing: 20) {
@@ -298,7 +324,9 @@ struct OnboardUserContentView: View {
                     name: name,
                     email: email,
                     dob: dob,
-                    contactNo: contactNo
+                    contactNo: contactNo,
+                    educationLevel: educationLevel,
+                    gender: gender
                 )
             }
         }

@@ -14,6 +14,8 @@ struct UserSummaryView: View {
     //let dob: Date
     let dob: String
     let contactNo: String
+    let educationLevel: String
+    let gender: String
 
 //    private var dobString: String {
 //        dob.formatted(date: .abbreviated, time: .omitted)
@@ -51,7 +53,9 @@ struct UserSummaryView: View {
             Label(name,  systemImage: "person.fill")
             Label(email, systemImage: "envelope.fill")
             Label(dob, systemImage: "calendar")
-            //Label(contactNo, systemImage: "phone")
+            Label(contactNo, systemImage: "phone")
+            Label(educationLevel, systemImage: "graduationcap")
+            Label(gender, systemImage: "person.circle.fill")
         }
         .font(.title3)
         .padding()
@@ -64,8 +68,8 @@ struct UserSummaryView: View {
 
 
 
-struct UserSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserSummaryView(name: "abcd", email: "abc@gmail.com", dob: "2002-10-02", contactNo: "+94767233764")
-    }
-}
+//struct UserSummaryView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UserSummaryView(name: "abcd", email: "abc@gmail.com", dob: "2002-10-02", contactNo: "+94767233764")
+//    }
+//}

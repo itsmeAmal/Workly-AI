@@ -14,8 +14,10 @@ struct User: Identifiable {
     var dob: String
     var email: String
     var contactNo: String
-    //var gender: String
-    //var educationLevel: String
+    var educationLevel: String
+    var gender: String
+    var isJobSeeker: Bool
 }
+
 
 
