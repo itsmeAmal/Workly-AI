@@ -17,6 +17,8 @@ struct UserSummaryView: View {
     let educationLevel: String
     let gender: String
 
+    @State private var goToDashboard = false
+    
 //    private var dobString: String {
 //        dob.formatted(date: .abbreviated, time: .omitted)
 //    }
@@ -37,14 +39,23 @@ struct UserSummaryView: View {
                 .multilineTextAlignment(.center)
                 .padding()
             
-            Button(action: {}) {
-                Text("Let's Go 🚀")
-                    .frame(maxWidth: .infinity)
+            NavigationStack {
+                VStack {
+                    Button {
+                        goToDashboard = true          // ② tap → flip the flag
+                    } label: {
+                        Text("Let’s Go 🚀")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding()
+                }
+                .navigationDestination(isPresented: $goToDashboard) {
+                    DashboardContentView()
+                }
             }
         }
         .padding()

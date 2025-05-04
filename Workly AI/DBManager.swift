@@ -98,17 +98,6 @@ final class DBManager {
         return f
     }()
     
-
-    // MARK: ‑ Insert
-//    func insert(name: String, dob: Date, email: String) {
-//        let sql = "INSERT INTO users (name, dob, email) VALUES (?,?,?)"
-//        _ = exec(sql: sql) { [self] stmt in
-//            sqlite3_bind_text(stmt, 1, (name  as NSString).utf8String, -1, SQLITE_TRANSIENT)
-//            sqlite3_bind_text(stmt, 2, (iso.string(from: dob) as NSString).utf8String,
-//                              -1, SQLITE_TRANSIENT)
-//            sqlite3_bind_text(stmt, 3, (email as NSString).utf8String, -1, SQLITE_TRANSIENT)
-//        }
-//    }
     
     
     func insert(name: String, dob: Date, email: String, contactNo: String, educationLevel: String, gender: String, isJobSeeker: Bool) {
@@ -194,6 +183,30 @@ final class DBManager {
 //            sqlite3_bind_int(stmt, 4, user.id)
 //        }
 //    }
+
+    
+    
+    // MARK: – Update
+    func update(user: User) {
+        let sql = """
+            UPDATE usrr
+            SET name = ?, dob = ?, email = ?, contactNo = ?,
+                        educationLevel = ?, gender = ?, isJobSeeker = ?
+            WHERE id = ?
+        """
+        _ = exec(sql: sql) { stmt in
+            sqlite3_bind_text(stmt, 1, (user.name        as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 2, (user.dob         as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 3, (user.email       as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 4, (user.contactNo   as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 5, (user.educationLevel   as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_text(stmt, 6, (user.gender      as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_int (stmt, 7, user.isJobSeeker ? 1 : 0)
+            sqlite3_bind_int (stmt, 8, user.id)
+        }
+        // ping listeners so ProfileView auto‑reloads
+        //NotificationCenter.default.post(name: .userDataChanged, object: nil)
+    }
 
     
   

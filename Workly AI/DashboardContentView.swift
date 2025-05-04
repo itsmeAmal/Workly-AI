@@ -135,6 +135,7 @@ struct DashboardContentView: View {
             .tabViewStyle(PageTabViewStyle())
             .frame(height: 250)
             .padding()
+            .navigationBarBackButtonHidden(true)
             
             Spacer()
         }

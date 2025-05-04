@@ -87,6 +87,7 @@ struct ContentView: View {
     }
 }
 
+
 struct DashboardView: View {
     var body: some View {
         DashboardContentView()
@@ -114,11 +115,15 @@ struct MockInterviewView: View {
 
 struct ProfileView: View {
     @State private var user: User
-
+    
+    @State private var isEditing = false
+    
     init(user: User) {
         _user = State(initialValue: user)
     }
-
+    
+    @State private var users: [User] = DBManager.shared.fetchUsers()
+    
     var body: some View {
         Form {
             Section(header: Text("Personal Details")) {
@@ -127,17 +132,59 @@ struct ProfileView: View {
                 infoRow(label: "person.circle.fill", text: user.gender)
                 infoRow(label: "briefcase.fill", text: user.isJobSeeker ? "Actively seeking for a Job" : "Not seeking for a Job")
             }
-
+            
             Section(header: Text("Education & Contact")) {
                 infoRow(label: "graduationcap.fill", text: user.educationLevel)
                 infoRow(label: "phone.fill", text: user.contactNo)
                 infoRow(label: "envelope.fill", text: user.email)
             }
+            
+            //.padding(.vertical)
+            
+            Button(action: {
+                isEditing = true
+            }) {
+                Text("Edit Profile")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                
+            }
+            .sheet(isPresented: $isEditing) {
+                if let currentUser = users.first {
+                    ProfileEditView(user: user)
+                        .tabItem {
+                            Image(systemName: "person.crop.circle.fill")
+                            Text("Profile")
+                        }
+                        .tag(4)
+                } else {
+                    // Placeholder tab until the user finishes onboarding
+                    Text("No profile yet")
+                        .tabItem {
+                            Image(systemName: "person.crop.circle")
+                            Text("Profile")
+                        }
+                        .tag(4)
+                }
+            }
         }
+        
+        //        Section(header: Text("Security")) {
+        //            //SecureField("Password", text: $password)
+        //            SecureField("Password", text: "$password")
+        //        }
+        
+        
         .navigationTitle("Profile")
     }
-
-
+    
+    func updateProfile() {
+        print("Profile Updated")
+    }
+    
     // this will avoid repeating the HStack
     @ViewBuilder
     private func infoRow(label systemImage: String, text: String) -> some View {
@@ -151,157 +198,31 @@ struct ProfileView: View {
 
 
 
-
-//struct ProfileView: View {
-//    @State private var users: [User] = DBManager.shared.fetchUsers()
-//    @State private var showingAdd = false
-//    
-//    @State private var isEditing = false
-//    
-//    //@State private var name: String = "John Doe"
-//    @State private var dateOfBirth: Date = Date()
-//    //@State private var gender: String = "Male"
-//    //@State private var educationLevel: String = "Bachelor's Degree"
-//    //@State private var contactNo: String = "+1 234 567 890"
-//    //@State private var email: String = "johndoe@example.com"
-//    @State private var password: String = "password123"
-//
-//    let name: String
-//    let email: String
-//    let dob: String
-//    let gender: String
-//    let educationLevel: String
-//    let contactNo: String
-//
-//    let genderOptions = ["Male", "Female", "Other"]
-//    let educationOptions = ["High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"]
-//
-//    var body: some View {
-//        NavigationView {
-//            Form {
-//                Section(header: Text("Personal Details")) {
-//                    
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "person.fill")
-//                            .foregroundColor(.secondary)
-//
-//                        //Text(users.name)
-//                        TextField("Full Name", text: .constant(name))
-//                            .disabled(true)   //keep it read‑only
-//                    }
-//                    //TextField("Full Name", text: .constant(name))
-//                    
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "cake.fill")
-//                            .foregroundColor(.secondary)
-//
-//                        TextField("Date of Birth", text: .constant(dob))
-//                            .disabled(true)   //keep it read‑only
-//                    }
-//                    //DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
-//                    
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "gender.fill")
-//                            .foregroundColor(.secondary)
-//
-//                        TextField("Gender", text: .constant(gender))
-//                            .disabled(true)   //keep it read‑only
-//                    }
-////                    Picker("Gender", selection: $gender) {
-////                        ForEach(genderOptions, id: \.self) { option in
-////                            Text(option)
-////                        }
-////                    }
-//                    
-//                }
-//                
-//                
-//                
-//                Section(header: Text("Education & Contact")) {
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "education.fill")
-//                            .foregroundColor(.secondary)
-//                        
-//                        TextField("Higher Education Level", text: .constant(educationLevel))
-//                            .disabled(true)   //keep it read‑only
-//                    }
-//                    //                    Picker("Higher Education Level", selection: $educationLevel) {
-//                    //                        ForEach(educationOptions, id: \.self) { option in
-//                    //                            Text(option)
-//                    //                        }
-//                    //                    }
-//                    
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "phone.fill")
-//                            .foregroundColor(.secondary)
-//                        
-//                        TextField("Contact Number", text: .constant(contactNo))
-//                            .disabled(true)   //keep it read‑only
-//                    }
-//                    //                    TextField("Contact Number", text: $contactNo)
-//                    //                        .keyboardType(.phonePad)
-//                    
-//                    
-//                    HStack(spacing: 8) {
-//                        Image(systemName: "envelop.fill")
-//                            .foregroundColor(.secondary)
-//                        
-//                        TextField("Email", text: .constant(email))
-//                            .disabled(true)  //keep it read‑only
-//                    }
-//                    //TextField("Email", text: .constant(email)).keyboardType(.emailAddress)
-//                    
-//                }
-//                
-//                
-//                Section(header: Text("Security")) {
-//                    SecureField("Password", text: $password)
-//                }
-//                
-//                
-////                Section {
-////                    Button(action: updateProfile) {
-////                        Text("Update Profile")
-////                            .frame(maxWidth: .infinity, alignment: .center)
-////                    }
-////                    .buttonStyle(.borderedProminent)
-////                }
-//                Button(action: {
-//                    isEditing = true
-//                }) {
-//                    Text("Edit Profile")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .foregroundColor(.white)
-//                        .cornerRadius(10)
-//                        .padding()
-//                }
-//                .sheet(isPresented: $isEditing) {
-//                    ProfileEditView()
-//                }
-//            }
-//            .navigationTitle("Profile")
-//        }
-//    }
-//
-//    func updateProfile() {
-//        print("Profile Updated")
-//    }
-//
-//}
-//
-
-
-
-
 struct ProfileEditView: View {
-    @State private var name: String = "John Doe"
-    @State private var dateOfBirth: Date = Date()
-    @State private var gender: String = "Male"
-    @State private var educationLevel: String = "Bachelor's Degree"
-    @State private var contactNo: String = "+1 234 567 890"
-    @State private var email: String = "johndoe@example.com"
+    @State private var user: User
+    
+    @State private var isEditing = true
+    
+    @State private var name: String
+    @State private var dateOfBirth: Date
+    @State private var gender: String
+    @State private var educationLevel: String
+    @State private var contactNo: String
+    @State private var email: String
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    init(user: User) {
+            _user            = State(initialValue: user)
+            _name            = State(initialValue: user.name)
+            // iso → Date
+            let iso = ISO8601DateFormatter()
+            _dateOfBirth     = State(initialValue: iso.date(from: user.dob) ?? Date())
+            _gender          = State(initialValue: user.gender)
+            _educationLevel  = State(initialValue: user.educationLevel)
+            _contactNo       = State(initialValue: user.contactNo)
+            _email           = State(initialValue: user.email)
+        }
     
     let genderOptions = ["Male", "Female", "Other"]
     let educationOptions = ["High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"]
@@ -310,6 +231,7 @@ struct ProfileEditView: View {
         NavigationView {
             Form {
                 Section(header: Text("Personal Details")) {
+                    infoRow(label: "person.fill", text: user.name)
                     TextField("Full Name", text: $name)
                     DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
                     Picker("Gender", selection: $gender) {
@@ -326,19 +248,47 @@ struct ProfileEditView: View {
                 }
                 
                 Section {
-                    Button("Save Changes") {
-                       
-                    }
+                    Button("Save Changes", action: save)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .buttonStyle(.borderedProminent)
                 }
             }
             .navigationTitle("Edit Profile")
+            .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Cancel") { dismiss() }
+                            }
+                        }
             .navigationBarItems(trailing: Button("Done") {
             })
         }
     }
+    
+    private func save() {
+            let iso = ISO8601DateFormatter()
+            user.name       = name
+            user.dob        = iso.string(from: dateOfBirth)
+            user.gender     = gender
+            user.educationLevel  = educationLevel
+            user.contactNo  = contactNo
+            user.email      = email
+
+            DBManager.shared.update(user: user)
+            dismiss()
+        }
+    
+    // this will avoid repeating the HStack
+    @ViewBuilder
+    private func infoRow(label systemImage: String, text: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: systemImage)
+                .foregroundColor(.secondary)
+            Text(text)
+        }
+    }
+
 }
+
 
 struct SettingsView: View {
     var body: some View {
