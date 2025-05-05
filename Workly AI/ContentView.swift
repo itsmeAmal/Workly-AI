@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var selectedTab = 0
     
+    @State private var reloadKey = UUID()
     @State private var users: [User] = DBManager.shared.fetchUsers()
         
     var body: some View {
@@ -42,7 +43,9 @@ struct ContentView: View {
                     Text("Mock Interview")
                 }
                 .tag(3)
-                    
+
+            
+            
             if let currentUser = users.first {
                             ProfileView(user: currentUser)
                                 .tabItem {
@@ -59,6 +62,17 @@ struct ContentView: View {
                                 }
                                 .tag(4)
                         }
+            
+            
+//            if let newest = DBManager.shared.fetchUsers().first {
+//                ProfileView(userID: newest.id)
+//                    .tabItem {
+//                        Image(systemName: "person.crop.circle.fill")
+//                        Text("Profile")
+//                    }
+//                    .tag(4)
+//            }
+
                                     
             SettingsView()
                 .tabItem {
@@ -113,6 +127,86 @@ struct MockInterviewView: View {
 }
 
 
+
+
+//struct ProfileView: View {
+//    // Pass only the record’s id so the view can always fetch fresh data
+//    let userID: Int32
+//
+//    // Snapshot of the row we’re showing
+//    @State private var user: User?
+//
+//    // Controls the edit sheet
+//    @State private var isEditing = false
+//
+//    var body: some View {
+//        Form {
+//            if let u = user {                              // show once loaded
+//                personalSection(u)
+//                educationSection(u)
+//
+//                Button("Edit Profile") { isEditing = true }
+//                    .frame(maxWidth: .infinity, alignment: .center)
+//                    .padding(.vertical)
+//                    .background(Color.blue)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(8)
+//                    .sheet(isPresented: $isEditing) {
+//                        ProfileEditView(user: u)           // pass snapshot
+//                    }
+//            } else {
+//                ProgressView()
+//                    .frame(maxWidth: .infinity, alignment: .center)
+//            }
+//        }
+//        .navigationTitle("Profile")
+//        .onAppear(perform: load)                           // reload each visit
+//        .onReceive(NotificationCenter.default
+//                   .publisher(for: .userDataChanged)) { _ in load() } // live refresh
+//    }
+//
+//    // MARK: – Sub‑views
+//    @ViewBuilder
+//    private func personalSection(_ u: User) -> some View {
+//        Section(header: Text("Personal Details")) {
+//            infoRow(label: "person.fill", text: u.name)
+//            infoRow(label: "birthday.cake.fill", text: u.dob)
+//            infoRow(label: "person.circle.fill", text: u.gender)
+//            infoRow(label: "briefcase.fill",
+//                    text: u.isJobSeeker ? "Actively seeking a job"
+//                                         : "Not seeking a job")
+//        }
+//    }
+//
+//    @ViewBuilder
+//    private func educationSection(_ u: User) -> some View {
+//        Section(header: Text("Education & Contact")) {
+//            infoRow(label: "graduationcap.fill", text: u.educationLevel)
+//            infoRow(label: "phone.fill", text: u.contactNo)
+//            infoRow(label: "envelope.fill", text: u.email)
+//        }
+//    }
+//
+//    @ViewBuilder
+//    private func infoRow(label systemImage: String, text: String) -> some View {
+//        HStack(spacing: 8) {
+//            Image(systemName: systemImage)
+//                .foregroundColor(.secondary)
+//            Text(text)
+//        }
+//    }
+//
+//    // MARK: – Data loader
+//    private func load() {
+//        user = DBManager.shared
+//                .fetchUsers()
+//                .first { $0.id == userID }    // latest snapshot
+//    }
+//}
+
+
+
+
 struct ProfileView: View {
     @State private var user: User
     
@@ -121,7 +215,7 @@ struct ProfileView: View {
     init(user: User) {
         _user = State(initialValue: user)
     }
-    
+        
     @State private var users: [User] = DBManager.shared.fetchUsers()
     
     var body: some View {
@@ -198,6 +292,7 @@ struct ProfileView: View {
 
 
 
+
 struct ProfileEditView: View {
     @State private var user: User
     
@@ -205,6 +300,7 @@ struct ProfileEditView: View {
     
     @State private var name: String
     @State private var dateOfBirth: Date
+    @State private var dob: String
     @State private var gender: String
     @State private var educationLevel: String
     @State private var contactNo: String
@@ -215,6 +311,7 @@ struct ProfileEditView: View {
     init(user: User) {
             _user            = State(initialValue: user)
             _name            = State(initialValue: user.name)
+            _dob             = State(initialValue: user.dob)
             // iso → Date
             let iso = ISO8601DateFormatter()
             _dateOfBirth     = State(initialValue: iso.date(from: user.dob) ?? Date())
@@ -231,7 +328,6 @@ struct ProfileEditView: View {
         NavigationView {
             Form {
                 Section(header: Text("Personal Details")) {
-                    infoRow(label: "person.fill", text: user.name)
                     TextField("Full Name", text: $name)
                     DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
                     Picker("Gender", selection: $gender) {
@@ -298,8 +394,11 @@ struct SettingsView: View {
     }
 }
 
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
+

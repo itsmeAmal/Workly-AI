@@ -9,6 +9,12 @@
 import Foundation
 import SQLite3
 
+
+extension Notification.Name {
+    static let userDataChanged = Notification.Name("userDataChanged")
+}
+
+
 let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
 final class DBManager {
@@ -53,7 +59,7 @@ final class DBManager {
     
     private func dropTable() {
         let sql = """
-            DROP TABLE usrr;
+            DROP TABLE user_table;
         """
         _ = exec(sql: sql)
     }
@@ -62,7 +68,7 @@ final class DBManager {
     // MARK:‑ Schema
     private func createTable() {
         let sql = """
-            CREATE TABLE IF NOT EXISTS usrr(
+            CREATE TABLE IF NOT EXISTS user_table(
                 id   INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 dob   TEXT,          -- ISO‑8601 yyyy-MM-dd
@@ -77,20 +83,6 @@ final class DBManager {
     }
 
     
-//    private func createTable() {
-//        let sql = """
-//            CREATE TABLE IF NOT EXISTS users(
-//                id  INTEGER PRIMARY KEY AUTOINCREMENT,
-//                name  TEXT    NOT NULL,
-//                dob   TEXT,
-//                email   TEXT,
-//                contactNo  TEXT  
-//            );
-//        """
-//        _ = exec(sql: "ALTER TABLE user_tabl ADD COLUMN contactNo TEXT")
-//    }
-
-    
     // ISO formatter once for the whole file
     private let iso: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()
@@ -101,7 +93,7 @@ final class DBManager {
     
     
     func insert(name: String, dob: Date, email: String, contactNo: String, educationLevel: String, gender: String, isJobSeeker: Bool) {
-        let sql = "INSERT INTO usrr (name, dob, email, contactNo, educationLevel, gender, isJobSeeker) VALUES (?,?,?,?,?,?,?)"
+        let sql = "INSERT INTO user_table (name, dob, email, contactNo, educationLevel, gender, isJobSeeker) VALUES (?,?,?,?,?,?,?)"
         _ = exec(sql: sql) { [self] stmt in
             sqlite3_bind_text(stmt, 1, (name as NSString).utf8String, -1, SQLITE_TRANSIENT)
             sqlite3_bind_text(stmt, 2, (iso.string(from: dob) as NSString).utf8String, -1, SQLITE_TRANSIENT)
@@ -111,33 +103,12 @@ final class DBManager {
             sqlite3_bind_text(stmt, 6, (gender as NSString).utf8String, -1, SQLITE_TRANSIENT)
             sqlite3_bind_int (stmt, 7, isJobSeeker ? 1 : 0)
         }
+        NotificationCenter.default.post(name: .userDataChanged, object: nil)
     }
 
     
-    
-//    func fetchUsers() -> [User] {
-//        let sql = "SELECT id, name, dob, email FROM users ORDER BY id DESC"
-//        var stmt: OpaquePointer?
-//        var result = [User]()
-//        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return result }
-//
-//        while sqlite3_step(stmt) == SQLITE_ROW {
-//            let id    = sqlite3_column_int(stmt, 0)
-//            let name  = String(cString: sqlite3_column_text(stmt, 1))
-//            let dobStr = String(cString: sqlite3_column_text(stmt, 2))
-//            let email = String(cString: sqlite3_column_text(stmt, 3))
-//
-//            let dob = iso.date(from: dobStr) ?? Date()
-//            result.append(User(id: id, name: name, dob: dobStr, email: email))
-//        }
-//        sqlite3_finalize(stmt)
-//        return result
-//    }
-    
-    
-    // MARK: ‑ Read
     func fetchUsers() -> [User] {
-        let sql = "SELECT id, name, dob, email, contactNo, educationLevel, gender, isJobSeeker FROM usrr ORDER BY id DESC"
+        let sql = "SELECT id, name, dob, email, contactNo, educationLevel, gender, isJobSeeker FROM user_table ORDER BY id DESC"
         var stmt: OpaquePointer?
         var out = [User]()
 
@@ -166,30 +137,15 @@ final class DBManager {
                 )
             )
         }
+        //NotificationCenter.default.post(name: .userDataChanged, object: nil)
         sqlite3_finalize(stmt)
         return out
     }
 
     
-
-    // MARK: ‑ Update
-//    func update(user: User) {
-//        let sql = "UPDATE users SET name=?, dob=?, email=? WHERE id=?"
-//        _ = exec(sql: sql) { [self] stmt in
-//            sqlite3_bind_text(stmt, 1, (user.name  as NSString).utf8String, -1, SQLITE_TRANSIENT)
-//            sqlite3_bind_text(stmt, 2, (iso.string(from: user.dob) as NSString).utf8String,
-//                              -1, SQLITE_TRANSIENT)
-//            sqlite3_bind_text(stmt, 3, (user.email as NSString).utf8String, -1, SQLITE_TRANSIENT)
-//            sqlite3_bind_int(stmt, 4, user.id)
-//        }
-//    }
-
-    
-    
-    // MARK: – Update
     func update(user: User) {
         let sql = """
-            UPDATE usrr
+            UPDATE user_table
             SET name = ?, dob = ?, email = ?, contactNo = ?,
                         educationLevel = ?, gender = ?, isJobSeeker = ?
             WHERE id = ?
@@ -204,16 +160,17 @@ final class DBManager {
             sqlite3_bind_int (stmt, 7, user.isJobSeeker ? 1 : 0)
             sqlite3_bind_int (stmt, 8, user.id)
         }
+        NotificationCenter.default.post(name: .userDataChanged, object: nil)
         // ping listeners so ProfileView auto‑reloads
         //NotificationCenter.default.post(name: .userDataChanged, object: nil)
     }
 
-    
   
     func delete(id: Int32) {
-        let sql = "DELETE FROM usrr WHERE id=?"
+        let sql = "DELETE FROM user_table WHERE id=?"
         _ = exec(sql: sql) { stmt in
             sqlite3_bind_int(stmt, 1, id)
+        NotificationCenter.default.post(name: .userDataChanged, object: nil)
         }
     }
 

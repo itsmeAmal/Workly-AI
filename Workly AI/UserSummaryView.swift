@@ -18,10 +18,6 @@ struct UserSummaryView: View {
     let gender: String
 
     @State private var goToDashboard = false
-    
-//    private var dobString: String {
-//        dob.formatted(date: .abbreviated, time: .omitted)
-//    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -76,11 +72,3 @@ struct UserSummaryView: View {
 }
 
 
-
-
-
-//struct UserSummaryView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserSummaryView(name: "abcd", email: "abc@gmail.com", dob: "2002-10-02", contactNo: "+94767233764")
-//    }
-//}

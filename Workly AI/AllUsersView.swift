@@ -51,8 +51,14 @@ struct AllUsersView: View {
         }
         .padding(.vertical, 4)
     }
-
-    private func load()              { users = DBManager.shared.fetchUsers() }
+    
+    
+    
+    private func load() {
+        users = DBManager.shared.fetchUsers()
+    }
+    
+    
     private func delete(at offsets: IndexSet) {
         offsets.map { users[$0].id }.forEach(DBManager.shared.delete)
         users.remove(atOffsets: offsets)
