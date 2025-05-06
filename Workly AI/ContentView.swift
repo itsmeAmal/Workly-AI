@@ -29,20 +29,20 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            DashboardView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Dashboard")
-                }
-                .tag(0)
+//            DashboardView()
+//                .tabItem {
+//                    Image(systemName: "house.fill")
+//                    Text("Dashboard")
+//                }
+//                .tag(0)
             
-            BotGuideView()
-                .tabItem {
-                    Image(systemName: "bubble.left.and.bubble.right.fill")
-                    Text("Bot Guide")
-                }
-                .tag(1)
-            
+//            BotGuideView()
+//                .tabItem {
+//                    Image(systemName: "bubble.left.and.bubble.right.fill")
+//                    Text("Bot Guide")
+//                }
+//                .tag(1)
+//            
             ChatBotContentView()
                 .tabItem {
                     Image(systemName: "message.fill")
@@ -50,12 +50,12 @@ struct ContentView: View {
                 }
                 .tag(2)
             
-            MockInterviewView()
-                .tabItem {
-                    Image(systemName: "person.text.rectangle.fill")
-                    Text("Mock Interview")
-                }
-                .tag(3)
+//            MockInterviewView()
+//                .tabItem {
+//                    Image(systemName: "person.text.rectangle.fill")
+//                    Text("Mock Interview")
+//                }
+//                .tag(3)
             
             ProfileView()
                 .tabItem {
