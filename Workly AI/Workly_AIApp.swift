@@ -7,11 +7,32 @@
 
 import SwiftUI
 
+//@main
+//struct Workly_AIApp: App {
+//    var body: some Scene {
+//        WindowGroup {
+//            ContentView()
+//        }
+//    }
+//}
+
+
 @main
 struct Workly_AIApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+    @StateObject private var session = SessionStore()
+        
+        var body: some Scene {
+            WindowGroup {
+                Group {
+                    if session.loggedInUser == nil {
+                        LoginView()
+                    } else {
+                        ContentView()          // ← your existing TabView
+                    }
+                }
+                .environmentObject(session)
+            }
         }
-    }
 }
+
+

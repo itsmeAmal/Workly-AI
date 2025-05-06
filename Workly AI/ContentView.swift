@@ -63,16 +63,6 @@ struct ContentView: View {
                                 .tag(4)
                         }
             
-            
-//            if let newest = DBManager.shared.fetchUsers().first {
-//                ProfileView(userID: newest.id)
-//                    .tabItem {
-//                        Image(systemName: "person.crop.circle.fill")
-//                        Text("Profile")
-//                    }
-//                    .tag(4)
-//            }
-
                                     
             SettingsView()
                 .tabItem {
@@ -125,84 +115,6 @@ struct MockInterviewView: View {
             .padding()
     }
 }
-
-
-
-
-//struct ProfileView: View {
-//    // Pass only the record’s id so the view can always fetch fresh data
-//    let userID: Int32
-//
-//    // Snapshot of the row we’re showing
-//    @State private var user: User?
-//
-//    // Controls the edit sheet
-//    @State private var isEditing = false
-//
-//    var body: some View {
-//        Form {
-//            if let u = user {                              // show once loaded
-//                personalSection(u)
-//                educationSection(u)
-//
-//                Button("Edit Profile") { isEditing = true }
-//                    .frame(maxWidth: .infinity, alignment: .center)
-//                    .padding(.vertical)
-//                    .background(Color.blue)
-//                    .foregroundColor(.white)
-//                    .cornerRadius(8)
-//                    .sheet(isPresented: $isEditing) {
-//                        ProfileEditView(user: u)           // pass snapshot
-//                    }
-//            } else {
-//                ProgressView()
-//                    .frame(maxWidth: .infinity, alignment: .center)
-//            }
-//        }
-//        .navigationTitle("Profile")
-//        .onAppear(perform: load)                           // reload each visit
-//        .onReceive(NotificationCenter.default
-//                   .publisher(for: .userDataChanged)) { _ in load() } // live refresh
-//    }
-//
-//    // MARK: – Sub‑views
-//    @ViewBuilder
-//    private func personalSection(_ u: User) -> some View {
-//        Section(header: Text("Personal Details")) {
-//            infoRow(label: "person.fill", text: u.name)
-//            infoRow(label: "birthday.cake.fill", text: u.dob)
-//            infoRow(label: "person.circle.fill", text: u.gender)
-//            infoRow(label: "briefcase.fill",
-//                    text: u.isJobSeeker ? "Actively seeking a job"
-//                                         : "Not seeking a job")
-//        }
-//    }
-//
-//    @ViewBuilder
-//    private func educationSection(_ u: User) -> some View {
-//        Section(header: Text("Education & Contact")) {
-//            infoRow(label: "graduationcap.fill", text: u.educationLevel)
-//            infoRow(label: "phone.fill", text: u.contactNo)
-//            infoRow(label: "envelope.fill", text: u.email)
-//        }
-//    }
-//
-//    @ViewBuilder
-//    private func infoRow(label systemImage: String, text: String) -> some View {
-//        HStack(spacing: 8) {
-//            Image(systemName: systemImage)
-//                .foregroundColor(.secondary)
-//            Text(text)
-//        }
-//    }
-//
-//    // MARK: – Data loader
-//    private func load() {
-//        user = DBManager.shared
-//                .fetchUsers()
-//                .first { $0.id == userID }    // latest snapshot
-//    }
-//}
 
 
 
@@ -265,11 +177,6 @@ struct ProfileView: View {
                 }
             }
         }
-        
-        //        Section(header: Text("Security")) {
-        //            //SecureField("Password", text: $password)
-        //            SecureField("Password", text: "$password")
-        //        }
         
         
         .navigationTitle("Profile")
@@ -386,13 +293,86 @@ struct ProfileEditView: View {
 }
 
 
+
 struct SettingsView: View {
+    @EnvironmentObject private var session: SessionStore
+    
     var body: some View {
-        Text("Settings")
-            .font(.title)
-            .padding()
+        List {
+            NavigationLink("Account") {
+                Text("Account settings coming soon.")
+                    .padding()
+                    .navigationTitle("Account")
+            }
+            
+            NavigationLink("About") {
+                VStack(spacing: 16) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 48))
+                    Text("Workly.AI v1.0\n© 2025 Your Name")
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .navigationTitle("About")
+            }
+            
+            NavigationLink("Credentials") {
+                CredentialsView()   // ← opens the Keychain viewer
+            }
+            
+            NavigationLink("All Keychain Items") {
+                AllKeychainItemsView()
+            }
+
+            Section {
+                Button("Log Out", role: .destructive) {
+                    session.logout()  // credentials remain; user can log back in
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+            }
+        }
+        .navigationTitle("Settings")
     }
 }
+
+
+//
+//struct SettingsView: View {
+//    //@EnvironmentObject private var session: SessionStore   // so we can pass it down
+//    
+//    
+//    var body: some View {
+//        List {
+//            // 1. Account
+//            NavigationLink("Account") {
+//                Text("Account settings coming soon.")
+//                    .padding()
+//                    .navigationTitle("Account")
+//            }
+//            
+//            // 2. Security & Privacy  → LoginView
+////            NavigationLink("Security & Privacy") {
+////                LoginView()
+////                    //.environmentObject(session)            // keep the same session
+////            }
+//            
+//            // 3. About
+//            NavigationLink("About") {
+//                VStack(spacing: 16) {
+//                    Image(systemName: "info.circle")
+//                        .font(.system(size: 48))
+//                    Text("LoginDemo v1.0\n© 2025 Your Name")
+//                        .multilineTextAlignment(.center)
+//                }
+//                .padding()
+//                .navigationTitle("About")
+//            }
+//        }
+//        .navigationTitle("Settings")
+//    }
+//}
+
+
 
 
 struct ContentView_Previews: PreviewProvider {
