@@ -131,56 +131,83 @@ struct ProfileView: View {
     @State private var users: [User] = DBManager.shared.fetchUsers()
     
     var body: some View {
-        Form {
-            Section(header: Text("Personal Details")) {
-                infoRow(label: "person.fill", text: user.name)
-                infoRow(label: "birthday.cake.fill", text: user.dob)
-                infoRow(label: "person.circle.fill", text: user.gender)
-                infoRow(label: "briefcase.fill", text: user.isJobSeeker ? "Actively seeking for a Job" : "Not seeking for a Job")
-            }
-            
-            Section(header: Text("Education & Contact")) {
-                infoRow(label: "graduationcap.fill", text: user.educationLevel)
-                infoRow(label: "phone.fill", text: user.contactNo)
-                infoRow(label: "envelope.fill", text: user.email)
-            }
-            
-            //.padding(.vertical)
-            
-            Button(action: {
-                isEditing = true
-            }) {
-                Text("Edit Profile")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+        NavigationStack {
+            ZStack {
+                // — Gradient backdrop —
+                LinearGradient(
+                    colors: [Color(#colorLiteral(red:0.16, green:0.28, blue:0.62, alpha:1)),
+                             Color(#colorLiteral(red:0.46, green:0.27, blue:0.75, alpha:1))],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
                 
+                ScrollView {
+                    VStack(spacing: 24) {
+                        
+                        // Avatar & name
+                        VStack(spacing: 12) {
+                            Image(systemName: "person.crop.circle.fill")
+                                .font(.system(size: 96))
+                                .foregroundColor(.white.opacity(0.9))
+                                .shadow(radius: 6)
+                            
+                            Text(user.name)
+                                .font(.title2.weight(.semibold))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, 16)
+                        
+                        // Glassy card with details
+                        VStack(alignment: .leading, spacing: 18) {
+                            // — Personal —
+                            Text("Personal Details")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.9))
+                            
+                            infoRow(label: "birthday.cake.fill", text: user.dob)
+                            infoRow(label: "person.circle.fill", text: user.gender)
+                            infoRow(label: "briefcase.fill",
+                                    text: user.isJobSeeker ? "Actively seeking a job" : "Not seeking a job")
+                            
+                            Divider().background(.white.opacity(0.25))
+                            
+                            // — Education & Contact —
+                            Text("Education & Contact")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.9))
+                            
+                            infoRow(label: "graduationcap.fill", text: user.educationLevel)
+                            infoRow(label: "phone.fill",          text: user.contactNo)
+                            infoRow(label: "envelope.fill",       text: user.email)
+                        }
+                        .padding(24)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.thinMaterial)
+                        .cornerRadius(24)
+                        .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
+                        .padding(.horizontal, 24)
+                        
+                        // Edit button
+                        Button("Edit Profile") {
+                            isEditing = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.bottom, 32)
+                    }
+                }
             }
             .sheet(isPresented: $isEditing) {
                 if let currentUser = users.first {
                     ProfileEditView(user: user)
-                        .tabItem {
-                            Image(systemName: "person.crop.circle.fill")
-                            Text("Profile")
-                        }
-                        .tag(4)
                 } else {
-                    // Placeholder tab until the user finishes onboarding
                     Text("No profile yet")
-                        .tabItem {
-                            Image(systemName: "person.crop.circle")
-                            Text("Profile")
-                        }
-                        .tag(4)
                 }
             }
+            .navigationTitle("Profile")
         }
-        
-        
-        .navigationTitle("Profile")
     }
+
     
     func updateProfile() {
         print("Profile Updated")
@@ -196,6 +223,8 @@ struct ProfileView: View {
         }
     }
 }
+
+
 
 
 
@@ -232,41 +261,92 @@ struct ProfileEditView: View {
     let educationOptions = ["High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD"]
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Personal Details")) {
-                    TextField("Full Name", text: $name)
-                    DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
-                    Picker("Gender", selection: $gender) {
-                        ForEach(genderOptions, id: \ .self) { Text($0) }
-                    }
-                }
+        NavigationStack {
+            ZStack {
+                backgroundGradient
                 
-                Section(header: Text("Education & Contact")) {
-                    Picker("Higher Education Level", selection: $educationLevel) {
-                        ForEach(educationOptions, id: \ .self) { Text($0) }
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 28) {
+                        personalCard()               // <─ extracted
+                        educationCard()              // <─ extracted
+                        
+                        Button("Save Changes", action: save)
+                            .buttonStyle(.borderedProminent)
+                            .padding(.bottom, 32)
                     }
-                    TextField("Contact Number", text: $contactNo)
-                    TextField("Email", text: $email)
-                }
-                
-                Section {
-                    Button("Save Changes", action: save)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 24)
                 }
             }
             .navigationTitle("Edit Profile")
             .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button("Cancel") { dismiss() }
-                            }
-                        }
-            .navigationBarItems(trailing: Button("Done") {
-            })
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
         }
     }
-    
+
+    // Gradient reused by both cards
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: [Color(#colorLiteral(red:0.16, green:0.28, blue:0.62, alpha:1)),
+                     Color(#colorLiteral(red:0.46, green:0.27, blue:0.75, alpha:1))],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
+
+    // ───────── Personal Details card ─────────
+    @ViewBuilder
+    private func personalCard() -> some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("Personal Details")
+                .font(.headline)
+                .foregroundColor(.white.opacity(0.9))
+            
+            TextField("Full Name", text: $name)
+                .textFieldStyle(.roundedBorder)
+            
+            DatePicker("Date of Birth",
+                       selection: $dateOfBirth,
+                       displayedComponents: .date)
+                .datePickerStyle(.compact)
+                .accentColor(.white)
+            
+            Picker("Gender", selection: $gender) {
+                ForEach(genderOptions, id: \.self) { Text($0) }
+            }
+            .pickerStyle(.segmented)
+        }
+        .cardStyle()
+    }
+
+    // ───────── Education & Contact card ──────
+    @ViewBuilder
+    private func educationCard() -> some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("Education & Contact")
+                .font(.headline)
+                .foregroundColor(.white.opacity(0.9))
+            
+            Picker("Education Level", selection: $educationLevel) {
+                ForEach(educationOptions, id: \.self) { Text($0) }
+            }
+            .pickerStyle(.menu)
+            
+            TextField("Contact Number", text: $contactNo)
+                .textFieldStyle(.roundedBorder)
+            
+            TextField("Email", text: $email)
+                .textFieldStyle(.roundedBorder)
+                .keyboardType(.emailAddress)
+        }
+        .cardStyle()
+    }
+
+
     private func save() {
             let iso = ISO8601DateFormatter()
             user.name       = name
@@ -290,7 +370,40 @@ struct ProfileEditView: View {
         }
     }
 
+
 }
+
+
+
+// --- Glass card modifier used by many screens ---
+private struct CardStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(24)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.thinMaterial)
+            .cornerRadius(24)
+            .shadow(radius: 10)
+    }
+}
+
+
+private extension View {
+    func cardStyle() -> some View { self.modifier(CardStyle()) }
+}
+
+//// ───────── Modifier for both cards ───────
+//private extension View {
+//    func cardStyle() -> some View {
+//        self
+//            .padding(24)
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            .background(.thinMaterial)
+//            .cornerRadius(24)
+//            .shadow(radius: 10)
+//    }
+//}
+
 
 
 
@@ -298,80 +411,99 @@ struct SettingsView: View {
     @EnvironmentObject private var session: SessionStore
     
     var body: some View {
-        List {
-            NavigationLink("Account") {
-                Text("Account settings coming soon.")
-                    .padding()
-                    .navigationTitle("Account")
-            }
-            
-            NavigationLink("About") {
-                VStack(spacing: 16) {
-                    Image(systemName: "info.circle")
-                        .font(.system(size: 48))
-                    Text("Workly.AI v1.0\n© 2025 Your Name")
-                        .multilineTextAlignment(.center)
+        NavigationStack {
+            ZStack {
+                // Gradient background (consistent with other screens)
+                LinearGradient(
+                    colors: [Color(#colorLiteral(red:0.16, green:0.28, blue:0.62, alpha:1)),
+                             Color(#colorLiteral(red:0.46, green:0.27, blue:0.75, alpha:1))],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 44) {
+                        
+                        // ── Cards with NavigationLinks ─────────────
+                        settingsCard {
+                            menuRow(label: "Account",  system: "person.crop.circle") {
+                                Text("Account settings coming soon.")
+                                    .padding()
+                                    .navigationTitle("Account")
+                            }
+                            .padding(.horizontal, 20)
+                            menuRow(label: "About",    system: "info.circle") {
+                                VStack(spacing: 16) {
+                                    Image(systemName: "info.circle")
+                                        .font(.system(size: 48))
+                                    Text("Workly.AI v1.0\n© 2025 Your Name")
+                                        .multilineTextAlignment(.center)
+                                }
+                                .padding()
+                                .navigationTitle("About")
+                            }
+                            .padding(.horizontal, 20)
+                            menuRow(label: "Credentials", system: "key.fill") {
+                                CredentialsView()
+                            }
+                            .padding(.horizontal, 20)
+                            menuRow(label: "All Keychain Items", system: "server.rack") {
+                                AllKeychainItemsView()
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        // ── Log Out button ────────────────────────
+                        Button("Log Out", role: .destructive) {
+                            session.logout()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.bottom, 42)
+                    }
+                    .padding(.horizontal, 34)
+                    .padding(.top, 24)
                 }
-                .padding()
-                .navigationTitle("About")
             }
-            
-            NavigationLink("Credentials") {
-                CredentialsView()   // ← opens the Keychain viewer
-            }
-            
-            NavigationLink("All Keychain Items") {
-                AllKeychainItemsView()
-            }
-
-            Section {
-                Button("Log Out", role: .destructive) {
-                    session.logout()  // credentials remain; user can log back in
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-            }
+            .navigationTitle("Settings")
         }
-        .navigationTitle("Settings")
     }
+
+    // MARK: – Small UI helpers
+    @ViewBuilder
+    private func menuRow<Destination: View>(
+        label: String,
+        system: String,
+        @ViewBuilder destination: @escaping () -> Destination
+    ) -> some View {
+        NavigationLink {
+            destination()
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: system)
+                    .font(.system(size: 20))
+                    .foregroundColor(.white.opacity(0.9))
+                Text(label)
+                    .foregroundColor(.white)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.white.opacity(0.7))
+            }
+            .padding(.vertical, 12)
+        }
+    }
+
+    @ViewBuilder
+    private func settingsCard<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        VStack(spacing: 0, content: content)
+            .padding(.vertical, 4)
+            .frame(maxWidth: .infinity)
+            .background(.thinMaterial)
+            .cornerRadius(24)
+            .shadow(radius: 10, y: 4)
+    }
+
 }
-
-
-//
-//struct SettingsView: View {
-//    //@EnvironmentObject private var session: SessionStore   // so we can pass it down
-//    
-//    
-//    var body: some View {
-//        List {
-//            // 1. Account
-//            NavigationLink("Account") {
-//                Text("Account settings coming soon.")
-//                    .padding()
-//                    .navigationTitle("Account")
-//            }
-//            
-//            // 2. Security & Privacy  → LoginView
-////            NavigationLink("Security & Privacy") {
-////                LoginView()
-////                    //.environmentObject(session)            // keep the same session
-////            }
-//            
-//            // 3. About
-//            NavigationLink("About") {
-//                VStack(spacing: 16) {
-//                    Image(systemName: "info.circle")
-//                        .font(.system(size: 48))
-//                    Text("LoginDemo v1.0\n© 2025 Your Name")
-//                        .multilineTextAlignment(.center)
-//                }
-//                .padding()
-//                .navigationTitle("About")
-//            }
-//        }
-//        .navigationTitle("Settings")
-//    }
-//}
-
 
 
 
