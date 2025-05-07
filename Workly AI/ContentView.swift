@@ -16,20 +16,20 @@ struct ContentView: View {
         
     var body: some View {
         TabView(selection: $selectedTab) {
-            DashboardView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Dashboard")
-                }
-                .tag(0)
+//            DashboardView()
+//                .tabItem {
+//                    Image(systemName: "house.fill")
+//                    Text("Dashboard")
+//                }
+//                .tag(0)
             
-            BotGuideView()
-                .tabItem {
-                    Image(systemName: "bubble.left.and.bubble.right.fill")
-                    Text("Bot Guide")
-                }
-                .tag(1)
-            
+//            BotGuideView()
+//                .tabItem {
+//                    Image(systemName: "bubble.left.and.bubble.right.fill")
+//                    Text("Bot Guide")
+//                }
+//                .tag(1)
+//            
             ChatBotContentView()
                 .tabItem {
                     Image(systemName: "message.fill")
@@ -43,8 +43,6 @@ struct ContentView: View {
                     Text("Mock Interview")
                 }
                 .tag(3)
-
-            
             
             if let currentUser = users.first {
                             ProfileView(user: currentUser)
@@ -110,9 +108,7 @@ struct BotGuideView: View {
 
 struct MockInterviewView: View {
     var body: some View {
-        Text("Personalized Interview Preparation")
-            .font(.title)
-            .padding()
+        MockInterviewContentView()
     }
 }
 
