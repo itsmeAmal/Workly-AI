@@ -3,10 +3,12 @@ import Foundation
 struct Job: Identifiable, Decodable {
     let id: String
     let title: String
-    let location: DisplayNameEntity
+    //let location: DisplayNameEntity
+    let location: String
     let description: String
     let redirectUrl: String
-    let company: DisplayNameEntity
+    //let company: DisplayNameEntity
+    let company: String
     let salaryMin: Double?
     let salaryMax: Double?
 

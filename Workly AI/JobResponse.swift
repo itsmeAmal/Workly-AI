@@ -8,8 +8,10 @@ struct JobResponse: Decodable {
 struct JobData: Decodable {
     let id: String
     let title: String
-    let company: DisplayNameEntity
-    let location: DisplayNameEntity
+    //let company: DisplayNameEntity
+    //let location: DisplayNameEntity
+    let company: String
+    let location: String
     let salary_min: Double?
     let salary_max: Double?
     let description: String

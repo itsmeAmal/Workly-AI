@@ -26,7 +26,7 @@ struct ChatBotContentView: View {
                 Spacer()
             }
             .padding()
-            .background(Color(hex: "102E50"))
+            .background(Color("27548A"))
 
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -122,8 +122,7 @@ struct ChatBotContentView: View {
             }
             .padding()
         }
-        .background(Color(hex: "FFFFFF").ignoresSafeArea())  // navy blue background #FFFFFF
-
+        .background(Color("001F3F").ignoresSafeArea()) // navy blue background
     }
 }
 
