@@ -126,15 +126,15 @@ class ChatBotViewModel: ObservableObject {
                         content: "Awesome! I found some openings on Adzuna that match what you're looking for:"
                     ))
 
-                    let pills = jobs.prefix(5).map { job in
-                        JobPillViewModel(
-                            title: job.title,
-                            location: job.location.displayName,
-                            company: "Adzuna"
-                        )
-                    }
+//                    let pills = jobs.prefix(5).map { job in
+//                        JobPillViewModel(
+//                            title: job.title,
+//                            location: job.location.displayName,
+//                            company: "Adzuna"
+//                        )
+//                    }
 
-                    self.jobPills = pills
+                    //self.jobPills = pills
                 }
 
                 self.isLoading = false

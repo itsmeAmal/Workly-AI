@@ -123,7 +123,6 @@ struct ChatBotContentView: View {
             .padding()
         }
         .background(Color(hex: "FFFFFF").ignoresSafeArea())  // navy blue background #FFFFFF
-
     }
 }
 
